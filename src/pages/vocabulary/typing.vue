@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import vocabulary from './vocabulary'
+import { ensureExampleTranslation, getExampleTranslationStatus } from './exampleTranslation'
 
 const CHAPTER_KEY = 'vocabulary_typing_chapter'
 const chapters = Object.keys(vocabulary)
@@ -22,6 +23,8 @@ const words = computed(() => {
 
 const currentWordData = computed(() => words.value[currentWordIndex.value])
 const currentWord = computed(() => currentWordData.value?.word[0] || '')
+
+watch(currentWordData, wordData => ensureExampleTranslation(wordData?.example), { immediate: true })
 
 watch(selectedChapter, (newVal) => {
   localStorage.setItem(CHAPTER_KEY, newVal)
@@ -206,6 +209,12 @@ onMounted(() => {
           </div>
           <p class="text-gray-500 dark:text-gray-400 italic text-sm sm:text-base max-w-xl mx-auto">
             {{ currentWordData?.example }}
+          </p>
+          <p
+            v-if="currentWordData?.example && currentWordData.example !== '-'"
+            class="mt-2 text-gray-600 dark:text-gray-300 text-sm sm:text-base max-w-xl mx-auto"
+          >
+            {{ getExampleTranslationStatus(currentWordData.example) }}
           </p>
         </div>
 

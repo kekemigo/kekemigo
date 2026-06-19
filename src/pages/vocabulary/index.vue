@@ -1,6 +1,7 @@
 <!-- eslint-disable eslint-comments/no-unlimited-disable -->
 <script setup generic="T extends any, O extends any">
 import vocabulary from './vocabulary'
+import { getExampleTranslationStatus, translateExamplesForItems } from './exampleTranslation'
 
 const CHAPTER_KEY = 'vocabulary_chapter'
 
@@ -49,7 +50,16 @@ const wordList = computed(() => {
 watch(category, (newVal, oldVal) => {
   // console.log(newVal, oldVal)
   localStorage.setItem(CHAPTER_KEY, newVal)
+  translateCurrentCategory()
 })
+
+function translateCurrentCategory() {
+  const current = refVocabulary[category.value]
+  if (!current)
+    return
+
+  translateExamplesForItems(current.words.flat())
+}
 
 function calcStats() {
   let error = 0
@@ -75,6 +85,7 @@ function calcStats() {
 
 onMounted(() => {
   loaded.value = true
+  translateCurrentCategory()
 
   // 只能同时播放一个音频
   const audioTags = document.getElementsByTagName('audio')
@@ -366,7 +377,17 @@ function copyAllError() {
                         {{ isShowMeaning ? item.meaning : '' }}
                       </td>
                       <td class="p-4">
-                        {{ isTrainingModel ? '' : item.example }}
+                        <template v-if="!isTrainingModel">
+                          <p class="italic">
+                            {{ item.example }}
+                          </p>
+                          <p
+                            v-if="item.example && item.example !== '-'"
+                            class="mt-2 text-xs leading-5 text-gray-600 dark:text-gray-300"
+                          >
+                            {{ getExampleTranslationStatus(item.example) }}
+                          </p>
+                        </template>
                       </td>
                       <td class="p-4">
                         {{ isTrainingModel ? '' : item.extra }}
