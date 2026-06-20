@@ -9,8 +9,10 @@ import AutoImport from 'unplugin-auto-import/vite'
 import UnoCSS from 'unocss/vite'
 import VueMacros from 'unplugin-vue-macros/vite'
 
+const isGitHubPages = process.env.GITHUB_PAGES === 'true'
+
 export default defineConfig({
-  base: '',
+  base: isGitHubPages ? '/kekemigo/' : '',
   server: {
     host: '0.0.0.0',
     port: 3333,
