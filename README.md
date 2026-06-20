@@ -1,4 +1,8 @@
-<p><br></p>
+# My IELTS
+
+个人 IELTS 备考网站，整理词汇、语法、听力、阅读、写作等学习材料。
+
+在线地址：[https://kekemigo.github.io/kekemigo/](https://kekemigo.github.io/kekemigo/)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="public/salvation_lies_within_IELTS_dark.svg">
@@ -6,46 +10,26 @@
   <img alt="Slogan: Salvation lies within IELTS" src="public/salvation_lies_within_IELTS_light.svg">
 </picture>
 
-<p><br></p>
-<p><br></p>
-<h1 align='center'>
-  My <span>IELTS™</span>
-</h1>
-
-<h2>在线地址 <a href="https://hefengxian.github.io/my-ielts/#/">https://hefengxian.github.io/my-ielts/</a></h2>
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="public/screenshot/screenshot-home-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="public/screenshot/screenshot-home-light.png">
   <img alt="Home" src="public/screenshot/screenshot-home-light.png">
 </picture>
 
+## 功能
 
-## 概述
+- 词汇：雅思词汇真经内容，按场景分组。
+- 例句翻译：词汇表里的英文例句已补充中文翻译。
+- 备注讲解：在拓展/备注栏补充部分生词提示、搭配和句式讲解。
+- 单词练习：支持词汇打字练习。
+- 语法：整理雅思语法课程相关内容。
+- 听力：包含听力基础概念、179 考点词和语料库相关内容。
+- 阅读：整理 538 考点词同义替换。
+- 写作：包含 100 句翻译练习和大小作文相关内容。
 
-雅思备考资料，包含词汇、语法、听说读写最出名的一些内容
+## 词汇
 
-- [x] 词汇练习模式
-
-## 规划栏目
-
-### 词汇
-
-> 2026-03 增加打字练习模式，感谢 [@Tommy1109255](https://github.com/Tommy1109255)
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="public/screenshot/typing-vocabulary-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="public/screenshot/typing-vocabulary-light.png">
-  <img alt="Vocabulary" src="public/screenshot/typing-vocabulary-light.png">
-</picture>
-
-雅思词汇真经（刘洪波橙色的那本）
-
-- 雅思核心词汇
-- 逻辑词群记忆法
-- 原书音频
-
-词列表
+词汇部分基于雅思词汇真经内容，包含核心词汇、场景分组、原书音频、例句翻译和备注讲解。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="public/screenshot/screenshot-vocabulary-dark.png">
@@ -53,21 +37,21 @@
   <img alt="Vocabulary" src="public/screenshot/screenshot-vocabulary-light.png">
 </picture>
 
-练习模式
+## 单词练习
+
+支持背景单词跟打练习，用来提升打字速度和单词读写熟悉度。
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="public/screenshot/screenshot-vocabulary-training-mode-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="public/screenshot/screenshot-vocabulary-training-mode-light.png">
-  <img alt="Vocabulary Training Mode" src="public/screenshot/screenshot-vocabulary-training-mode-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="public/screenshot/typing-vocabulary-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="public/screenshot/typing-vocabulary-light.png">
+  <img alt="Vocabulary typing practice" src="public/screenshot/typing-vocabulary-light.png">
 </picture>
+
+## 其他模块
 
 ### 语法
 
-新东方雅思语法
-
-- 视频
-- 讲义
-- 思维导图
+整理新东方雅思语法课程相关内容，包含视频、讲义和思维导图。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="public/screenshot/screenshot-grammar-dark.png">
@@ -77,11 +61,7 @@
 
 ### 听力
 
-了解雅思听力，以及考试中的一些基本原则、技巧
-
-- 基本概念和应试技巧
-- 听力 179 考点词
-- [WIP] 雅思听力王语料库
+整理雅思听力基础概念、应试技巧、179 考点词和语料库内容。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="public/screenshot/screenshot-listening-dark.png">
@@ -89,13 +69,9 @@
   <img alt="Listening" src="public/screenshot/screenshot-listening-light.png">
 </picture>
 
-### 口语
-
-TODO
-
 ### 阅读
 
-- 538 考点词同义替换
+整理阅读 538 考点词同义替换。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="public/screenshot/screenshot-reading-dark.png">
@@ -103,12 +79,9 @@ TODO
   <img alt="Reading" src="public/screenshot/screenshot-reading-light.png">
 </picture>
 
-
 ### 写作
 
-写作相关内容，从基础开始
-
-- 顾家北手把手教你雅思写作 V6.0 —— 100 句翻译练习
+整理写作相关内容，包含 100 句翻译练习和大小作文。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="public/screenshot/screenshot-writing-dark.png">
@@ -116,24 +89,16 @@ TODO
   <img alt="Writing" src="public/screenshot/screenshot-writing-light.png">
 </picture>
 
-## 开发
-
-本项目使用
-
-- [Vitesse Lite](https://github.com/antfu/vitesse-lite) 作为模板开发
-- 样式部分参照了 [Flowbite](https://github.com/themesberg/flowbite) & [Flowbite Admin Dashboard](https://flowbite-admin-dashboard.vercel.app)
-
-所以需要对 Vue3、TailWindCSS 有一定的了解才能二次开发
+## 本地运行
 
 ```bash
-# 安装依赖
 pnpm i
-
-# 开发模式
 pnpm run dev
-
-# 构建
 pnpm run build
 ```
 
-## 禁止将本项目用于任何商业目的！！！
+## 致谢
+
+本项目基于开源项目 [hefengxian/my-ielts](https://github.com/hefengxian/my-ielts) 修改，用于个人 IELTS 备考学习。
+
+原项目禁止用于任何商业目的。
