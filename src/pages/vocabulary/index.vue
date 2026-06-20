@@ -15,6 +15,7 @@ const isShowSource = ref(false)
 
 const trainingStats = ref('')
 const keyword = ref('')
+const exampleTranslationLabel = '\u4f8b\u53e5\u7ffb\u8bd1\uff1a'
 const chapters = Object.keys(vocabulary)
 const category = ref(localStorage.getItem(CHAPTER_KEY) || chapters[0])
 
@@ -386,7 +387,7 @@ function copyAllError() {
                             v-if="item.example && item.example !== '-'"
                             class="mt-2 text-xs leading-5 text-gray-600 dark:text-gray-300"
                           >
-                            例句翻译：{{ getExampleTranslationStatus(item.example) }}
+                            {{ exampleTranslationLabel }}{{ getExampleTranslationStatus(item.example) }}
                           </p>
                         </template>
                       </td>

@@ -1,4 +1,8 @@
-const CACHE_KEY = 'vocabulary_example_translations_v2'
+const CACHE_KEY = 'vocabulary_example_translations_v3'
+const NO_TRANSLATION = '\u6682\u65e0\u8bd1\u6587'
+const UNAVAILABLE = '\u81ea\u52a8\u7ffb\u8bd1\u6682\u65f6\u4e0d\u53ef\u7528'
+const TRANSLATING = '\u7ffb\u8bd1\u4e2d...'
+const LOADING = '\u8bd1\u6587\u52a0\u8f7d\u4e2d...'
 
 export const exampleTranslations = reactive<Record<string, string>>({})
 export const translatingExamples = reactive<Record<string, boolean>>({})
@@ -76,11 +80,11 @@ export async function ensureExampleTranslation(text?: string) {
   translatingExamples[example] = true
   try {
     const translated = await translateText(example)
-    exampleTranslations[example] = translated || '暂无译文'
+    exampleTranslations[example] = translated || NO_TRANSLATION
     saveCache()
   }
   catch {
-    exampleTranslations[example] = '自动翻译暂时不可用'
+    exampleTranslations[example] = UNAVAILABLE
   }
   finally {
     translatingExamples[example] = false
@@ -109,5 +113,5 @@ export function getExampleTranslationStatus(text?: string) {
   if (exampleTranslations[example])
     return exampleTranslations[example]
 
-  return translatingExamples[example] ? '翻译中...' : '译文加载中...'
+  return translatingExamples[example] ? TRANSLATING : LOADING
 }

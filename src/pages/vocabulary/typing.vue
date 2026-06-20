@@ -13,6 +13,7 @@ const startTime = ref<number | null>(null)
 const wpm = ref(0)
 const accuracy = ref(100)
 const isFinished = ref(false)
+const exampleTranslationLabel = '\u4f8b\u53e5\u7ffb\u8bd1\uff1a'
 
 const words = computed(() => {
   const chapter = (vocabulary as any)[selectedChapter.value]
@@ -215,7 +216,7 @@ onMounted(() => {
             v-if="currentWordData?.example && currentWordData.example !== '-'"
             class="mt-2 text-gray-600 dark:text-gray-300 text-sm sm:text-base max-w-xl mx-auto"
           >
-            例句翻译：{{ getExampleTranslationStatus(currentWordData.example) }}
+            {{ exampleTranslationLabel }}{{ getExampleTranslationStatus(currentWordData.example) }}
           </p>
           <div
             v-if="currentWordData && getExampleStudyNotes(currentWordData).length"
