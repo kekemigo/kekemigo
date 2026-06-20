@@ -386,7 +386,7 @@ function copyAllError() {
                             v-if="item.example && item.example !== '-'"
                             class="mt-2 text-xs leading-5 text-gray-600 dark:text-gray-300"
                           >
-                            {{ getExampleTranslationStatus(item.example) }}
+                            例句翻译：{{ getExampleTranslationStatus(item.example) }}
                           </p>
                         </template>
                       </td>

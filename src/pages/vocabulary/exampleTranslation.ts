@@ -89,7 +89,7 @@ export async function ensureExampleTranslation(text?: string) {
 
 export async function translateExamplesForItems(items: Array<{ example?: string }>) {
   const run = ++activeRun
-  const examples = Array.from(new Set(items.map(item => item.example?.trim()).filter(hasExample))).slice(0, 40)
+  const examples = Array.from(new Set(items.map(item => item.example?.trim()).filter(hasExample)))
 
   for (let i = 0; i < examples.length; i += 4) {
     if (run !== activeRun)

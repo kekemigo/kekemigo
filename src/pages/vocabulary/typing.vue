@@ -215,7 +215,7 @@ onMounted(() => {
             v-if="currentWordData?.example && currentWordData.example !== '-'"
             class="mt-2 text-gray-600 dark:text-gray-300 text-sm sm:text-base max-w-xl mx-auto"
           >
-            {{ getExampleTranslationStatus(currentWordData.example) }}
+            例句翻译：{{ getExampleTranslationStatus(currentWordData.example) }}
           </p>
           <div
             v-if="currentWordData && getExampleStudyNotes(currentWordData).length"
