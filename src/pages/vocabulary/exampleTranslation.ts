@@ -1,4 +1,4 @@
-const CACHE_KEY = 'vocabulary_example_translations_v1'
+const CACHE_KEY = 'vocabulary_example_translations_v2'
 
 export const exampleTranslations = reactive<Record<string, string>>({})
 export const translatingExamples = reactive<Record<string, boolean>>({})
@@ -26,7 +26,7 @@ function saveCache() {
     localStorage.setItem(CACHE_KEY, JSON.stringify(exampleTranslations))
   }
   catch {
-    // Ignore quota or private-mode storage failures; translations still show for this session.
+    // Storage can fail in private mode or when quota is full.
   }
 }
 
@@ -34,14 +34,33 @@ function hasExample(text?: string) {
   return Boolean(text && text.trim() && text.trim() !== '-')
 }
 
-async function translateText(text: string) {
+async function translateWithMyMemory(text: string) {
   const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|zh-CN`
   const response = await fetch(url)
   if (!response.ok)
-    throw new Error(`Translation request failed: ${response.status}`)
+    throw new Error(`MyMemory failed: ${response.status}`)
 
   const data = await response.json()
   return data?.responseData?.translatedText?.trim() || ''
+}
+
+async function translateWithGoogle(text: string) {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q=${encodeURIComponent(text)}`
+  const response = await fetch(url)
+  if (!response.ok)
+    throw new Error(`Google translate failed: ${response.status}`)
+
+  const data = await response.json()
+  return data?.[0]?.map((part: string[]) => part?.[0] || '').join('').trim() || ''
+}
+
+async function translateText(text: string) {
+  try {
+    return await translateWithMyMemory(text)
+  }
+  catch {
+    return await translateWithGoogle(text)
+  }
 }
 
 export async function ensureExampleTranslation(text?: string) {
@@ -70,12 +89,13 @@ export async function ensureExampleTranslation(text?: string) {
 
 export async function translateExamplesForItems(items: Array<{ example?: string }>) {
   const run = ++activeRun
-  const examples = Array.from(new Set(items.map(item => item.example?.trim()).filter(hasExample)))
+  const examples = Array.from(new Set(items.map(item => item.example?.trim()).filter(hasExample))).slice(0, 40)
 
-  for (const example of examples) {
+  for (let i = 0; i < examples.length; i += 4) {
     if (run !== activeRun)
       return
-    await ensureExampleTranslation(example)
+
+    await Promise.all(examples.slice(i, i + 4).map(example => ensureExampleTranslation(example)))
   }
 }
 

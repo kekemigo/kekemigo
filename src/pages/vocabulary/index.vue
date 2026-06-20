@@ -2,6 +2,7 @@
 <script setup generic="T extends any, O extends any">
 import vocabulary from './vocabulary'
 import { getExampleTranslationStatus, translateExamplesForItems } from './exampleTranslation'
+import { getExampleStudyNotes } from './exampleStudyNotes'
 
 const CHAPTER_KEY = 'vocabulary_chapter'
 
@@ -390,7 +391,22 @@ function copyAllError() {
                         </template>
                       </td>
                       <td class="p-4">
-                        {{ isTrainingModel ? '' : item.extra }}
+                        <template v-if="!isTrainingModel">
+                          <p v-if="item.extra && item.extra !== '-'">
+                            {{ item.extra }}
+                          </p>
+                          <div
+                            v-if="getExampleStudyNotes(item).length"
+                            class="mt-2 space-y-1 text-xs leading-5 text-gray-700 dark:text-gray-300"
+                          >
+                            <p
+                              v-for="note in getExampleStudyNotes(item)"
+                              :key="note"
+                            >
+                              {{ note }}
+                            </p>
+                          </div>
+                        </template>
                       </td>
                     </tr>
                   </template>

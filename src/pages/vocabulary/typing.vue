@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import vocabulary from './vocabulary'
 import { ensureExampleTranslation, getExampleTranslationStatus } from './exampleTranslation'
+import { getExampleStudyNotes } from './exampleStudyNotes'
 
 const CHAPTER_KEY = 'vocabulary_typing_chapter'
 const chapters = Object.keys(vocabulary)
@@ -216,6 +217,17 @@ onMounted(() => {
           >
             {{ getExampleTranslationStatus(currentWordData.example) }}
           </p>
+          <div
+            v-if="currentWordData && getExampleStudyNotes(currentWordData).length"
+            class="mt-4 text-left text-gray-600 dark:text-gray-300 text-sm max-w-xl mx-auto space-y-1"
+          >
+            <p
+              v-for="note in getExampleStudyNotes(currentWordData)"
+              :key="note"
+            >
+              {{ note }}
+            </p>
+          </div>
         </div>
 
         <!-- Audio trigger hint -->
