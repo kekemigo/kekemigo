@@ -46,6 +46,9 @@ devDependencies:
   '@vue/test-utils':
     specifier: ^2.3.2
     version: 2.4.1(vue@3.3.4)
+  cmu-pronouncing-dictionary:
+    specifier: ^3.0.0
+    version: 3.0.0
   eslint:
     specifier: ^8.42.0
     version: 8.45.0
@@ -2235,6 +2238,10 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
+  /cmu-pronouncing-dictionary@3.0.0:
+    resolution: {integrity: sha512-6y5X4OxsYFnHERo6WSVPnLrk53G07MOQ8aUb2z555JgwynpbZsHR0a//WdN6DUcmE1j2auTF2TtL4PpoKze8QQ==}
+    dev: true
+
   /color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
     dependencies:
@@ -2737,6 +2744,7 @@ packages:
   /eslint-plugin-i@2.27.5-4(@typescript-eslint/parser@6.2.0)(eslint@8.45.0):
     resolution: {integrity: sha512-X3Z+dp9nZw7d/y41EDO6JyFw4WVMOT91SFuoJvL0C0/4M1l6NxQ5mLTjXHuYhq0AazW75pAmj25yMk5wPMzjsw==}
     engines: {node: '>=12'}
+    deprecated: Please migrate to the brand new `eslint-plugin-import-x` instead
     peerDependencies:
       eslint: ^7.2.0 || ^8
     dependencies:

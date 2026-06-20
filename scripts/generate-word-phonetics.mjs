@@ -2,13 +2,77 @@ import { execFile } from 'node:child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { promisify } from 'node:util'
+import { dictionary as cmuDictionary } from 'cmu-pronouncing-dictionary'
 
 const ROOT = process.cwd()
 const VOCABULARY_FILE = path.join(ROOT, 'src/pages/vocabulary/vocabulary.js')
 const OUTPUT_FILE = path.join(ROOT, 'src/pages/vocabulary/wordPhonetics.generated.ts')
 const CACHE_FILE = path.join(ROOT, '.word-phonetic-cache.json')
 const PROXY_URL = process.env.HTTPS_PROXY || process.env.HTTP_PROXY || 'http://127.0.0.1:7890'
+const ENABLE_ONLINE_LOOKUP = process.env.PHONETICS_ONLINE === 'true'
 const execFileAsync = promisify(execFile)
+
+const ARPABET_TO_IPA = {
+  AA: 'ɑ',
+  AE: 'æ',
+  AH: 'ʌ',
+  AO: 'ɔ',
+  AW: 'aʊ',
+  AY: 'aɪ',
+  B: 'b',
+  CH: 'tʃ',
+  D: 'd',
+  DH: 'ð',
+  EH: 'ɛ',
+  ER: 'ɚ',
+  EY: 'eɪ',
+  F: 'f',
+  G: 'ɡ',
+  HH: 'h',
+  IH: 'ɪ',
+  IY: 'i',
+  JH: 'dʒ',
+  K: 'k',
+  L: 'l',
+  M: 'm',
+  N: 'n',
+  NG: 'ŋ',
+  OW: 'oʊ',
+  OY: 'ɔɪ',
+  P: 'p',
+  R: 'r',
+  S: 's',
+  SH: 'ʃ',
+  T: 't',
+  TH: 'θ',
+  UH: 'ʊ',
+  UW: 'u',
+  V: 'v',
+  W: 'w',
+  Y: 'j',
+  Z: 'z',
+  ZH: 'ʒ',
+}
+
+const PHONETIC_OVERRIDES = {
+  hydrosphere: '/ˈhaɪdrəˌsfɪr/',
+  lithosphere: '/ˈlɪθəˌsfɪr/',
+  respire: '/rɪˈspaɪr/',
+  interbreed: '/ˌɪntərˈbrid/',
+  refraction: '/rɪˈfrækʃən/',
+  matriculation: '/məˌtrɪkjəˈleɪʃən/',
+  maths: '/mæθs/',
+  pictograph: '/ˈpɪktəˌɡræf/',
+  antonym: '/ˈæntənɪm/',
+  preposition: '/ˌprɛpəˈzɪʃən/',
+  refectory: '/rɪˈfɛktəri/',
+  brickwork: '/ˈbrɪkˌwɝk/',
+  swop: '/swɑp/',
+  résumé: '/ˈrɛzəmeɪ/',
+  biorhythm: '/ˈbaɪoʊˌrɪðəm/',
+  influenze: '/ˌɪnfluˈɛnzə/',
+  slothful: '/ˈsloʊθfəl/',
+}
 
 function decodeJsonString(value) {
   return JSON.parse(`"${value}"`)
@@ -16,6 +80,84 @@ function decodeJsonString(value) {
 
 function normalizeWord(word) {
   return word.trim().toLowerCase()
+}
+
+function normalizeDictionaryKey(word) {
+  return normalizeWord(word)
+    .replace(/[’]/g, '\'')
+    .replace(/[^a-z'.-]/g, '')
+}
+
+function arpabetToIpa(pronunciation) {
+  const converted = pronunciation.split(/\s+/).map((token) => {
+    const match = token.match(/^([A-Z]+)([012])?$/)
+    if (!match)
+      return ''
+
+    const [, sound, stress] = match
+    const ipa = ARPABET_TO_IPA[sound]
+    if (!ipa)
+      return ''
+
+    if (stress === '1')
+      return `ˈ${ipa}`
+    if (stress === '2')
+      return `ˌ${ipa}`
+    return ipa
+  }).join('')
+
+  return converted ? `/${converted}/` : ''
+}
+
+function findCmuPronunciation(word) {
+  const key = normalizeDictionaryKey(word)
+  if (!key)
+    return ''
+
+  const variants = [
+    key,
+    key.replace(/[.-]/g, ''),
+    key.replace(/ise$/, 'ize'),
+    key.replace(/yse$/, 'yze'),
+    key.replace(/isation$/, 'ization'),
+    key.replace(/our$/, 'or'),
+    key.replace(/our([a-z])/, 'or$1'),
+    key.replace(/re$/, 'er'),
+    key.replace(/ogue$/, 'og'),
+    key.replace(/^enrol$/, 'enroll'),
+    key.replace(/^artefact$/, 'artifact'),
+    key.replace(/^appetiser$/, 'appetizer'),
+    key.replace(/^instalment$/, 'installment'),
+    key.replace(/^manoeuvre$/, 'maneuver'),
+    key.replace(/^sceptical$/, 'skeptical'),
+    key.normalize('NFD').replace(/[\u0300-\u036F]/g, ''),
+  ]
+
+  for (const variant of variants) {
+    if (cmuDictionary[variant])
+      return cmuDictionary[variant]
+  }
+
+  return ''
+}
+
+function getCmuPhonetic(word) {
+  const override = PHONETIC_OVERRIDES[normalizeWord(word)]
+  if (override)
+    return override
+
+  const pronunciation = findCmuPronunciation(word)
+  if (pronunciation)
+    return arpabetToIpa(pronunciation)
+
+  if (/[\s-]/.test(word)) {
+    const parts = word.split(/[\s-]+/).filter(Boolean)
+    const partPhonetics = parts.map(getCmuPhonetic).filter(Boolean)
+    if (partPhonetics.length === parts.length)
+      return partPhonetics.join(' ')
+  }
+
+  return ''
 }
 
 function collectWords(source) {
@@ -81,10 +223,21 @@ async function fetchSingleWordPhonetic(word) {
 
 async function fetchWordPhonetic(word, cache) {
   const cacheKey = normalizeWord(word)
-  if (cacheKey in cache)
+  if (cache[cacheKey])
     return cache[cacheKey]
 
-  let phonetic = await fetchSingleWordPhonetic(word)
+  let phonetic = getCmuPhonetic(word)
+  if (phonetic) {
+    cache[cacheKey] = phonetic
+    return phonetic
+  }
+
+  if (!ENABLE_ONLINE_LOOKUP) {
+    cache[cacheKey] = ''
+    return ''
+  }
+
+  phonetic = await fetchSingleWordPhonetic(word)
   if (!phonetic && /[\s-]/.test(word)) {
     const parts = word.split(/[\s-]+/).filter(Boolean)
     const partPhonetics = []
