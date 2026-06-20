@@ -8,3 +8,7 @@ export function getWordPhonetic(word?: string) {
 
   return phonetics[word] || phonetics[word.toLowerCase()] || ''
 }
+
+export function getWordPhoneticDisplay(word?: string) {
+  return getWordPhonetic(word) || '\u6682\u65e0'
+}

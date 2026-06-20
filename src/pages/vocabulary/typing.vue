@@ -2,7 +2,7 @@
 import vocabulary from './vocabulary'
 import { ensureExampleTranslation, getExampleTranslationStatus } from './exampleTranslation'
 import { getExampleStudyNotes } from './exampleStudyNotes'
-import { getWordPhonetic } from './wordPhonetic'
+import { getWordPhonetic, getWordPhoneticDisplay } from './wordPhonetic'
 
 const CHAPTER_KEY = 'vocabulary_typing_chapter'
 const chapters = Object.keys(vocabulary)
@@ -187,10 +187,10 @@ onMounted(() => {
         </div>
 
         <p
-          v-if="getWordPhonetic(currentWord)"
-          class="-mt-4 mb-8 text-center text-base text-gray-500 dark:text-gray-400"
+          class="-mt-4 mb-8 text-center font-mono text-base font-medium text-sky-700 dark:text-sky-300"
+          :class="{ 'text-gray-400 dark:text-gray-500': !getWordPhonetic(currentWord) }"
         >
-          {{ getWordPhonetic(currentWord) }}
+          音标：{{ getWordPhoneticDisplay(currentWord) }}
         </p>
 
         <!-- Invisible Input covering the whole area -->

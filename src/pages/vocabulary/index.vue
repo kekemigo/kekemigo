@@ -3,7 +3,7 @@
 import vocabulary from './vocabulary'
 import { getExampleTranslationStatus, translateExamplesForItems } from './exampleTranslation'
 import { getExampleStudyNotes } from './exampleStudyNotes'
-import { getWordPhonetic } from './wordPhonetic'
+import { getWordPhonetic, getWordPhoneticDisplay } from './wordPhonetic'
 
 const CHAPTER_KEY = 'vocabulary_chapter'
 
@@ -364,10 +364,10 @@ function copyAllError() {
                               :href="`https://dictionary.cambridge.org/dictionary/english-chinese-simplified/${w}`"
                             >{{ w }}</a>
                             <span
-                              v-if="getWordPhonetic(w)"
-                              class="mt-0.5 block text-xs font-normal leading-4 text-gray-500 dark:text-gray-400"
+                              class="mt-1 block whitespace-normal font-mono text-[13px] font-medium leading-5 text-sky-700 dark:text-sky-300"
+                              :class="{ 'text-gray-400 dark:text-gray-500': !getWordPhonetic(w) }"
                             >
-                              {{ getWordPhonetic(w) }}
+                              音标：{{ getWordPhoneticDisplay(w) }}
                             </span>
                           </p>
 
