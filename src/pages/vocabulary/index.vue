@@ -3,6 +3,7 @@
 import vocabulary from './vocabulary'
 import { getExampleTranslationStatus, translateExamplesForItems } from './exampleTranslation'
 import { getExampleStudyNotes } from './exampleStudyNotes'
+import { getWordPhonetic } from './wordPhonetic'
 
 const CHAPTER_KEY = 'vocabulary_chapter'
 
@@ -357,11 +358,17 @@ function copyAllError() {
                       </td>
                       <td class="group relative whitespace-nowrap p-4">
                         <div v-if="!isTrainingModel || item.showSource || (isTrainingModel && isOnlyShowErrors && item.spellError) || isShowSource">
-                          <p v-for="w in item.word" :key="w">
+                          <p v-for="w in item.word" :key="w" class="mb-1">
                             <a
                               class="hover:underline" :title="`在剑桥词典中查询 ${w}`" target="_blank"
                               :href="`https://dictionary.cambridge.org/dictionary/english-chinese-simplified/${w}`"
                             >{{ w }}</a>
+                            <span
+                              v-if="getWordPhonetic(w)"
+                              class="mt-0.5 block text-xs font-normal leading-4 text-gray-500 dark:text-gray-400"
+                            >
+                              {{ getWordPhonetic(w) }}
+                            </span>
                           </p>
 
                           <div

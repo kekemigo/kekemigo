@@ -2,6 +2,7 @@
 import vocabulary from './vocabulary'
 import { ensureExampleTranslation, getExampleTranslationStatus } from './exampleTranslation'
 import { getExampleStudyNotes } from './exampleStudyNotes'
+import { getWordPhonetic } from './wordPhonetic'
 
 const CHAPTER_KEY = 'vocabulary_typing_chapter'
 const chapters = Object.keys(vocabulary)
@@ -184,6 +185,13 @@ onMounted(() => {
             </span>
           </div>
         </div>
+
+        <p
+          v-if="getWordPhonetic(currentWord)"
+          class="-mt-4 mb-8 text-center text-base text-gray-500 dark:text-gray-400"
+        >
+          {{ getWordPhonetic(currentWord) }}
+        </p>
 
         <!-- Invisible Input covering the whole area -->
         <input
