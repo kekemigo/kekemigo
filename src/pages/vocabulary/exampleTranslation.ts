@@ -1,10 +1,13 @@
+import generatedExampleTranslations from './exampleTranslations.generated'
+
 const CACHE_KEY = 'vocabulary_example_translations_v3'
 const NO_TRANSLATION = '\u6682\u65e0\u8bd1\u6587'
 const UNAVAILABLE = '\u81ea\u52a8\u7ffb\u8bd1\u6682\u65f6\u4e0d\u53ef\u7528'
 const TRANSLATING = '\u7ffb\u8bd1\u4e2d...'
 const LOADING = '\u8bd1\u6587\u52a0\u8f7d\u4e2d...'
+const staticExampleTranslations = generatedExampleTranslations as Record<string, string>
 
-export const exampleTranslations = reactive<Record<string, string>>({})
+export const exampleTranslations = reactive<Record<string, string>>({ ...staticExampleTranslations })
 export const translatingExamples = reactive<Record<string, boolean>>({})
 
 let cacheLoaded = false
@@ -17,8 +20,13 @@ function loadCache() {
   cacheLoaded = true
   try {
     const cached = localStorage.getItem(CACHE_KEY)
-    if (cached)
-      Object.assign(exampleTranslations, JSON.parse(cached))
+    if (cached) {
+      const cachedTranslations = JSON.parse(cached) as Record<string, string>
+      for (const [example, translation] of Object.entries(cachedTranslations)) {
+        if (!staticExampleTranslations[example])
+          exampleTranslations[example] = translation
+      }
+    }
   }
   catch {
     localStorage.removeItem(CACHE_KEY)
@@ -74,7 +82,7 @@ export async function ensureExampleTranslation(text?: string) {
     return
 
   const example = text!.trim()
-  if (exampleTranslations[example] || translatingExamples[example])
+  if (staticExampleTranslations[example] || exampleTranslations[example] || translatingExamples[example])
     return
 
   translatingExamples[example] = true
@@ -94,6 +102,7 @@ export async function ensureExampleTranslation(text?: string) {
 export async function translateExamplesForItems(items: Array<{ example?: string }>) {
   const run = ++activeRun
   const examples = Array.from(new Set(items.map(item => item.example?.trim()).filter(hasExample)))
+    .filter(example => !staticExampleTranslations[example])
 
   for (let i = 0; i < examples.length; i += 4) {
     if (run !== activeRun)
@@ -110,6 +119,9 @@ export function getExampleTranslationStatus(text?: string) {
     return ''
 
   const example = text!.trim()
+  if (staticExampleTranslations[example])
+    return staticExampleTranslations[example]
+
   if (exampleTranslations[example])
     return exampleTranslations[example]
 
