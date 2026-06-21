@@ -26,6 +26,13 @@ const words = computed(() => {
 
 const currentWordData = computed(() => words.value[currentWordIndex.value])
 const currentWord = computed(() => currentWordData.value?.word[0] || '')
+const currentWordGroup = computed(() => {
+  const chapter = (vocabulary as any)[selectedChapter.value]
+  if (!chapter || !currentWordData.value)
+    return []
+
+  return chapter.words.find((group: any[]) => group.includes(currentWordData.value)) || []
+})
 
 watch(currentWordData, wordData => ensureExampleTranslation(wordData?.example), { immediate: true })
 
@@ -227,11 +234,11 @@ onMounted(() => {
             {{ exampleTranslationLabel }}{{ getExampleTranslationStatus(currentWordData.example) }}
           </p>
           <div
-            v-if="currentWordData && getExampleStudyNotes(currentWordData).length"
+            v-if="currentWordData && getExampleStudyNotes(currentWordData, currentWordGroup).length"
             class="mt-4 text-left text-gray-600 dark:text-gray-300 text-sm max-w-xl mx-auto space-y-1"
           >
             <p
-              v-for="note in getExampleStudyNotes(currentWordData)"
+              v-for="note in getExampleStudyNotes(currentWordData, currentWordGroup)"
               :key="note"
             >
               {{ note }}

@@ -404,11 +404,11 @@ function copyAllError() {
                             {{ item.extra }}
                           </p>
                           <div
-                            v-if="getExampleStudyNotes(item).length"
+                            v-if="getExampleStudyNotes(item, wordGroup).length"
                             class="mt-2 space-y-1 text-xs leading-5 text-gray-700 dark:text-gray-300"
                           >
                             <p
-                              v-for="note in getExampleStudyNotes(item)"
+                              v-for="note in getExampleStudyNotes(item, wordGroup)"
                               :key="note"
                             >
                               {{ note }}
